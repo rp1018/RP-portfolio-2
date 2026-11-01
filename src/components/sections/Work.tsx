@@ -16,7 +16,7 @@ export default function Work() {
   const isMobile = useMediaQuery('(max-width: 767px)');
 
   const carouselItems = PROJECTS.map((p) => ({
-    src: `${p.src}?v=4`,
+    src: `${p.src}?v=5`,
     alt: p.alt || p.title,
     title: p.title,
     subtitle: p.subtitle,
@@ -307,6 +307,11 @@ export default function Work() {
                 <h3 className="text-lg sm:text-xl font-bold text-[var(--ink)]">
                   {activeProject.title}
                 </h3>
+                {activeProject.tagline && (
+                  <p className="text-xs font-medium text-[var(--ink-dim)] mt-0.5">
+                    {activeProject.tagline}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center gap-3">
@@ -317,7 +322,7 @@ export default function Work() {
                     rel="noopener noreferrer"
                     className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[var(--ink)] text-[var(--bg)] hover:opacity-90 transition-opacity"
                   >
-                    <span>Visit Live</span>
+                    <span>Visit Repository</span>
                     <ExternalLink size={12} />
                   </a>
                 )}
@@ -343,8 +348,8 @@ export default function Work() {
 
             {/* Modal Footer Description */}
             <div className="w-full pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[var(--ink-dim)]">
-              <p className="max-w-2xl leading-relaxed">
-                {activeProject.description}
+              <p className="max-w-3xl leading-relaxed">
+                {activeProject.fullDescription || activeProject.description}
               </p>
               <div className="flex items-center gap-2 shrink-0">
                 <span className="font-mono text-[11px] text-[var(--ink-faint)]">

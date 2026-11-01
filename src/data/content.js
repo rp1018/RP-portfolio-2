@@ -32,13 +32,15 @@ export const PROJECTS = [
     alt: 'Student Management App screens'
   },
   {
-    id: 'ai-os-assistant',
-    title: 'AI OS Assistant',
-    subtitle: 'Python · Ollama · pyautogui',
-    description: 'Local autonomous operating system assistant leveraging Python, Ollama local LLMs, and PyAutoGUI desktop automation.',
-    link: '#',
+    id: 'ai-system-assistant',
+    title: 'AI System Assistant',
+    subtitle: 'Python · NVIDIA NIM · PyQt5 · Llama 3.1',
+    tagline: 'Your Desktop, Smarter. Powered by AI.',
+    description: 'A Python-based AI desktop assistant that combines natural language interaction, voice communication, and intelligent desktop automation. Built with NVIDIA NIM and Llama 3.1, it understands user requests and dynamically determines whether to respond conversationally or execute system actions.',
+    fullDescription: 'Your Desktop, Smarter. Powered by AI. A Python-based AI desktop assistant that combines natural language interaction, voice communication, and intelligent desktop automation. Built with NVIDIA NIM and Llama 3.1, it understands user requests and dynamically determines whether to respond conversationally or execute system actions. Features include voice input and output, application launching, web navigation, keyboard and mouse automation, and contextual conversation memory. Designed with a PyQt5 graphical interface and a command-line mode, bringing AI-powered assistance directly into everyday desktop workflows.',
+    link: 'https://github.com/rp1018/Local-AI-System-Assistant',
     src: '/projects/ai-os-assistant.png',
-    alt: 'AI OS Assistant'
+    alt: 'AI System Assistant desktop interface'
   }
 ];
 
