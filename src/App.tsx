@@ -12,6 +12,7 @@ import Learning from '@/components/sections/Learning';
 import Contact from '@/components/sections/Contact';
 import Footer from '@/components/sections/Footer';
 import { TornDivider } from '@/components/collage/TornDivider';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 export default function App() {
   return (
@@ -20,21 +21,21 @@ export default function App() {
         <IntroProvider>
           <IntroSequence />
           <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] selection:bg-[var(--ink)] selection:text-[var(--paper-ink)]">
-            <Navbar />
+            <ErrorBoundary><Navbar /></ErrorBoundary>
             <main id="main-content">
-              <Hero />
-              <Statement />
-              <AboutStack />
+              <ErrorBoundary><Hero /></ErrorBoundary>
+              <ErrorBoundary><Statement /></ErrorBoundary>
+              <ErrorBoundary><AboutStack /></ErrorBoundary>
               {/* Subtle torn divider before The Card */}
               <TornDivider />
-              <TheCard />
+              <ErrorBoundary><TheCard /></ErrorBoundary>
               {/* Subtle torn divider after The Card */}
               <TornDivider flip={true} />
-              <Work />
-              <Learning />
-              <Contact />
+              <ErrorBoundary><Work /></ErrorBoundary>
+              <ErrorBoundary><Learning /></ErrorBoundary>
+              <ErrorBoundary><Contact /></ErrorBoundary>
             </main>
-            <Footer />
+            <ErrorBoundary><Footer /></ErrorBoundary>
           </div>
         </IntroProvider>
       </SmoothScrollProvider>

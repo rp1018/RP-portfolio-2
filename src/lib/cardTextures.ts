@@ -3,12 +3,12 @@ import { SITE } from '@/data/content';
 
 let cachedTextures: { frontImage: string; backImage: string; strapImage: string } | null = null;
 
-export async function getCardTextures(): Promise<{
+export async function getCardTextures(forceRefresh = false): Promise<{
   frontImage: string;
   backImage: string;
   strapImage: string;
 }> {
-  if (cachedTextures) {
+  if (cachedTextures && !forceRefresh) {
     return cachedTextures;
   }
 
@@ -78,16 +78,16 @@ async function generateFrontFace(): Promise<string> {
 
   // Top header labels (aligned near slot center y = 83px, keeping clamp slot clear)
   // Left: faint RP monogram
-  ctx.fillStyle = 'rgba(22, 19, 28, 0.10)';
-  ctx.font = '700 38px "Geist Variable", sans-serif';
+  ctx.fillStyle = 'rgba(22, 19, 28, 0.15)';
+  ctx.font = '700 40px "Geist Variable", sans-serif';
   ctx.textBaseline = 'middle';
   ctx.fillText('RP', 70, 85);
 
-  // Right: B.TECH CSE '28 in Geist Mono
+  // Right: @rp1018 handle matching reference badge
   ctx.fillStyle = '#6E6B78';
-  ctx.font = '500 28px "Geist Mono Variable", monospace, sans-serif';
+  ctx.font = '500 32px "Geist Mono Variable", monospace, sans-serif';
   ctx.textAlign = 'right';
-  ctx.fillText("B.TECH CSE '28", 1024 - 70, 85);
+  ctx.fillText('@rp1018', 1024 - 70, 85);
   ctx.textAlign = 'left';
 
   // Hairline under top header
@@ -98,31 +98,128 @@ async function generateFrontFace(): Promise<string> {
   ctx.lineTo(1024 - 70, 150);
   ctx.stroke();
 
-  // Try to load portrait photo
+  // Try to load portrait photo (checks multiple candidate paths)
   let portraitLoaded = false;
-  try {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.src = '/profile/rp-portrait.png';
-    await new Promise((resolve, reject) => {
-      img.onload = resolve;
-      img.onerror = reject;
-    });
+  const candidateSources = [
+    '/profile/rp-portrait.png',
+    '/RP2.png',
+    '/rp-portrait.png',
+    '/profile/rp-portrait.jpg',
+    '/RP.png'
+  ];
 
-    // Draw portrait cut-out with grayscale & contrast filter
-    ctx.save();
-    ctx.filter = 'grayscale(1) contrast(1.15)';
-    const targetH = 1440 * 0.70; // 70% height
-    const aspect = img.width / img.height;
-    const targetW = targetH * aspect;
-    const drawX = (1024 - targetW) / 2;
-    const drawY = 1440 - targetH - 120;
-    ctx.drawImage(img, drawX, drawY, targetW, targetH);
-    ctx.restore();
-    portraitLoaded = true;
-  } catch {
-    // Portrait not provided yet: draw luxury monogram
-    console.info('[RP Portfolio] /profile/rp-portrait.png not supplied yet; rendering luxury monogram.');
+  for (const src of candidateSources) {
+    try {
+      const img = new Image();
+      // Do not use crossOrigin for same-origin local assets to prevent CORS failure
+      img.src = src;
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+
+      console.log('[RP Portfolio] Portrait image loaded successfully from:', src);
+
+      // Downsample large camera images for fast canvas processing
+      let tw = img.naturalWidth || img.width;
+      let th = img.naturalHeight || img.height;
+      const maxDim = 1200;
+      if (tw > maxDim || th > maxDim) {
+        const scale = maxDim / Math.max(tw, th);
+        tw = Math.round(tw * scale);
+        th = Math.round(th * scale);
+      }
+
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = tw;
+      tempCanvas.height = th;
+      const tCtx = tempCanvas.getContext('2d');
+
+      if (tCtx) {
+        tCtx.drawImage(img, 0, 0, tw, th);
+
+        try {
+          const w = tw;
+          const h = th;
+          const imgData = tCtx.getImageData(0, 0, w, h);
+          const data = imgData.data;
+          const visited = new Uint8Array(w * h);
+          const queue = new Int32Array(w * h);
+          let head = 0;
+          let tail = 0;
+
+          // Check if pixel is dark background outside sticker
+          const isDark = (idx: number): boolean => {
+            const p = idx * 4;
+            return data[p] < 90 && data[p + 1] < 90 && data[p + 2] < 90;
+          };
+
+          // Seed queue with all 4 outer border pixels
+          for (let x = 0; x < w; x++) {
+            const top = x;
+            const btm = (h - 1) * w + x;
+            if (isDark(top) && !visited[top]) { visited[top] = 1; queue[tail++] = top; }
+            if (isDark(btm) && !visited[btm]) { visited[btm] = 1; queue[tail++] = btm; }
+          }
+          for (let y = 0; y < h; y++) {
+            const lft = y * w;
+            const rgt = y * w + (w - 1);
+            if (isDark(lft) && !visited[lft]) { visited[lft] = 1; queue[tail++] = lft; }
+            if (isDark(rgt) && !visited[rgt]) { visited[rgt] = 1; queue[tail++] = rgt; }
+          }
+
+          // Flood-fill BFS: turns exterior black background transparent without touching interior dark jacket/hair
+          while (head < tail) {
+            const curr = queue[head++];
+            const cx = curr % w;
+            const cy = (curr / w) | 0;
+
+            // Set alpha to 0
+            data[curr * 4 + 3] = 0;
+
+            // 4-way neighbors
+            if (cx > 0) {
+              const n = curr - 1;
+              if (!visited[n] && isDark(n)) { visited[n] = 1; queue[tail++] = n; }
+            }
+            if (cx < w - 1) {
+              const n = curr + 1;
+              if (!visited[n] && isDark(n)) { visited[n] = 1; queue[tail++] = n; }
+            }
+            if (cy > 0) {
+              const n = curr - w;
+              if (!visited[n] && isDark(n)) { visited[n] = 1; queue[tail++] = n; }
+            }
+            if (cy < h - 1) {
+              const n = curr + w;
+              if (!visited[n] && isDark(n)) { visited[n] = 1; queue[tail++] = n; }
+            }
+          }
+
+          tCtx.putImageData(imgData, 0, 0);
+        } catch (procErr) {
+          console.warn('[RP Portfolio] Canvas flood-fill notice:', procErr);
+        }
+
+        const targetH = 1440 * 0.72; // 72% height
+        const aspect = tempCanvas.width / tempCanvas.height;
+        const targetW = targetH * aspect;
+        const drawX = (1024 - targetW) / 2;
+        const drawY = 1440 - targetH - 110;
+
+        // Soft shadow lifts the white sticker outline off the paper card
+        ctx.save();
+        ctx.shadowColor = 'rgba(22, 19, 28, 0.30)';
+        ctx.shadowBlur = 30;
+        ctx.shadowOffsetY = 12;
+        ctx.drawImage(tempCanvas, drawX, drawY, targetW, targetH);
+        ctx.restore();
+        portraitLoaded = true;
+        break;
+      }
+    } catch (err) {
+      console.warn('[RP Portfolio] Candidate error:', src, err);
+    }
   }
 
   if (!portraitLoaded) {
@@ -214,7 +311,7 @@ async function generateBackFace(): Promise<string> {
     { label: 'EMAIL', value: SITE.email },
     { label: 'LINKEDIN', value: SITE.linkedin },
     { label: 'GITHUB', value: SITE.github },
-    { label: 'RESUME', value: 'rpportfolio01.netlify.app/resume.pdf' },
+    { label: 'RESUME', value: `${SITE.url.replace(/^https?:\/\//, '')}/resume.pdf` },
     { label: 'LOCATION', value: SITE.location },
   ];
 

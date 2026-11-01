@@ -14,7 +14,7 @@ export default function Work() {
   const isMobile = useMediaQuery('(max-width: 767px)');
 
   const carouselItems = PROJECTS.map((p) => ({
-    src: `${p.src}?v=2`,
+    src: `${p.src}?v=3`,
     alt: p.alt || p.title,
     title: p.title,
     subtitle: p.subtitle,

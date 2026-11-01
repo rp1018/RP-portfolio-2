@@ -8,6 +8,7 @@ import FlipCard from '@/components/react-bits/FlipCard/FlipCard';
 import { useThemeTokens } from '@/lib/theme';
 import { useMediaQuery } from '@/lib/useMediaQuery';
 import { MaskHeadline } from '@/components/ui/TextReveal';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 export default function TheCard() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -43,8 +44,13 @@ export default function TheCard() {
       setUseFallback(true);
     }
 
-    // Load textures
-    getCardTextures().then(setTextures).catch(console.error);
+    // Load textures (force fresh evaluation)
+    getCardTextures(true)
+      .then(setTextures)
+      .catch((err) => {
+        console.error(err);
+        setUseFallback(true);
+      });
 
     // Lazy load when at least 15% visible
     const observer = new IntersectionObserver(
@@ -157,6 +163,7 @@ export default function TheCard() {
             </div>
           ) : isVisible && textures ? (
             /* Interactive Three.js Physics Lanyard with resolved token colors */
+            <ErrorBoundary onError={() => setUseFallback(true)}>
             <Lanyard
               frontImage={textures.frontImage}
               backImage={textures.backImage}
@@ -181,6 +188,7 @@ export default function TheCard() {
               dragMode="physics"
               className="w-full h-full"
             />
+            </ErrorBoundary>
           ) : (
             /* Skeleton while loading */
             <div className="w-[340px] h-[500px] rounded-[24px] bg-[var(--bg-elev)] border border-[var(--line)] animate-pulse flex items-center justify-center">

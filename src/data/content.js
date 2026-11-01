@@ -5,9 +5,9 @@ export const SITE = {
   about: "I'm a B.Tech CSE student (class of 2028) who builds practical software, from Flutter apps to Flask backends, explores AI, and keeps getting better at it.",
   education: "B.Tech CSE, Bharath University, Tamil Nadu, India (class of 2028)",
   url: 'https://rpportfolio01.netlify.app', // swap if domain changes
-  email: '[EMAIL]', // TODO user fills
-  github: '[GITHUB_URL]', // TODO user fills
-  linkedin: '[LINKEDIN_URL]', // TODO user fills
+  email: 'rithickprasath001@gmail.com',
+  github: 'https://github.com/rp1018',
+  linkedin: 'https://www.linkedin.com/in/rp1018',
   resume: '/resume.pdf', // TODO user drops file in /public
   location: 'Tamil Nadu, India'
 };
@@ -15,9 +15,9 @@ export const SITE = {
 export const PROJECTS = [
   {
     id: 'thinko-ai',
-    title: 'Thinko AI',
+    title: 'Thinko AI — Chatbot',
     subtitle: 'Flask · NVIDIA Llama · Firebase',
-    description: 'An AI-driven platform powered by Flask, NVIDIA Llama models, and Firebase real-time integration.',
+    description: 'An AI-powered chatbot built to answer questions, explain concepts, assist with coding, and support everyday tasks through a clean, user-friendly interface. Powered by NVIDIA AI models with a Flask backend.',
     link: 'https://thinko-ai-2.onrender.com',
     src: '/projects/thinko-ai.png',
     alt: 'Thinko AI interface'
