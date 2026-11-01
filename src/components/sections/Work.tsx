@@ -86,7 +86,7 @@ export default function Work() {
               title="Open full uncropped preview"
             >
               <Maximize2 size={13} />
-              <span>Full Preview</span>
+              <span>View Full Image</span>
             </button>
 
             {activeProject.link && activeProject.link !== '#' ? (
@@ -151,33 +151,38 @@ export default function Work() {
         <div className="block md:hidden mt-6">
           <Paper className="p-6 rounded-2xl border border-[var(--line)] shadow-lg">
             <div className="flex items-center justify-between mb-3">
-              <span className="font-mono text-xs text-[var(--ink-faint)]">
+              <span className="font-mono text-xs text-[#16131C]/60">
                 0{selectedIndex + 1} / 0{PROJECTS.length}
               </span>
-              <span className="font-sans text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[var(--bg-elev)] border border-[var(--line)] text-[var(--ink-dim)]">
+              <span className="font-sans text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-black/[0.05] border border-black/10 text-[#16131C]/80">
                 {activeProject.subtitle.split('·')[0].trim()}
               </span>
             </div>
             <h3 className="font-sans font-bold text-xl text-[var(--paper-ink)] mb-1">
               {activeProject.title}
             </h3>
-            <p className="font-sans text-xs text-[var(--ink-dim)] mb-3">
+            {activeProject.tagline && (
+              <p className="font-sans text-xs font-medium text-[#16131C]/85 mb-1.5 italic">
+                {activeProject.tagline}
+              </p>
+            )}
+            <p className="font-sans text-xs text-[#16131C]/65 mb-3">
               {activeProject.subtitle}
             </p>
-            <p className="text-sm text-[var(--paper-ink)]/80 leading-relaxed mb-4">
+            <p className="text-sm text-[#16131C]/85 leading-relaxed mb-4">
               {activeProject.description}
             </p>
 
-            <div className="pt-3 border-t border-[var(--line)] flex items-center justify-between gap-2 flex-wrap">
+            <div className="pt-3 border-t border-black/10 flex items-center justify-between gap-2 flex-wrap">
               <div className="flex items-center gap-2">
                 {/* Mobile Full Preview Button */}
                 <button
                   type="button"
                   onClick={() => setLightboxOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-sans font-medium border border-[var(--line)] bg-[var(--bg-elev)] text-[var(--paper-ink)] active:scale-95 transition-all"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-sans font-medium border border-black/15 bg-black/[0.04] text-[#16131C] hover:bg-black/[0.09] active:scale-95 transition-all cursor-pointer"
                 >
                   <Maximize2 size={13} />
-                  <span>Full Photo</span>
+                  <span>View Full Image</span>
                 </button>
 
                 {activeProject.link && activeProject.link !== '#' && (
@@ -185,7 +190,7 @@ export default function Work() {
                     href={activeProject.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-sans font-medium bg-[var(--paper-ink)] text-[var(--paper)] shadow hover:opacity-90 active:scale-95 transition-all"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-sans font-medium bg-[#16131C] text-[#F2F1EE] shadow hover:bg-black active:scale-95 transition-all"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <span>Visit Live</span>
@@ -194,7 +199,7 @@ export default function Work() {
                 )}
               </div>
 
-              <span className="font-sans text-[11px] text-[var(--ink-faint)]">
+              <span className="font-sans text-[11px] text-[#16131C]/50">
                 Swipe carousel to change
               </span>
             </div>
@@ -235,25 +240,30 @@ export default function Work() {
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="font-mono text-xs text-[var(--ink-faint)]">
+                    <span className="font-mono text-xs text-[#16131C]/60">
                       0{idx + 1} / 0{PROJECTS.length}
                     </span>
-                    <span className="font-sans text-[11px] font-medium px-2 py-0.5 rounded bg-[var(--bg-elev)] border border-[var(--line)]">
+                    <span className="font-sans text-[11px] font-medium px-2 py-0.5 rounded bg-black/[0.05] border border-black/10 text-[#16131C]/80">
                       {project.subtitle.split('·')[0].trim()}
                     </span>
                   </div>
                   <h3 className="font-bold text-lg text-[var(--paper-ink)] mb-1">
                     {project.title}
                   </h3>
-                  <p className="font-sans text-xs text-[var(--ink-dim)] mb-3">
+                  {project.tagline && (
+                    <p className="font-sans text-xs font-medium text-[#16131C]/85 mb-1.5 italic">
+                      {project.tagline}
+                    </p>
+                  )}
+                  <p className="font-sans text-xs text-[#16131C]/65 mb-3">
                     {project.subtitle}
                   </p>
-                  <p className="text-xs text-[var(--paper-ink)]/80 leading-relaxed mb-4">
+                  <p className="text-xs text-[#16131C]/80 leading-relaxed mb-4">
                     {project.description}
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-[var(--line)] flex items-center justify-between">
+                <div className="pt-3 border-t border-black/10 flex items-center justify-between">
                   <button
                     type="button"
                     onClick={(e) => {
@@ -261,10 +271,10 @@ export default function Work() {
                       setSelectedIndex(idx);
                       setLightboxOpen(true);
                     }}
-                    className="inline-flex items-center gap-1.5 text-xs font-sans text-[var(--ink-dim)] hover:text-[var(--ink)] transition-colors"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-sans font-medium text-[#16131C]/80 hover:text-[#16131C] hover:bg-black/[0.06] transition-colors cursor-pointer"
                   >
                     <Maximize2 size={12} />
-                    <span>View Full Photo</span>
+                    <span>View Full Image</span>
                   </button>
 
                   {project.link && project.link !== '#' && (
@@ -272,7 +282,7 @@ export default function Work() {
                       href={project.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-sans font-medium text-[var(--paper-ink)] hover:underline"
+                      className="inline-flex items-center gap-1.5 text-xs font-sans font-medium text-[#16131C] hover:underline"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <span>Live App</span>
@@ -302,7 +312,7 @@ export default function Work() {
             <div className="w-full flex items-center justify-between pb-4 mb-4 border-b border-[var(--line)]">
               <div>
                 <span className="font-mono text-xs text-[var(--ink-faint)]">
-                  Uncropped Full Preview
+                  View Full Image
                 </span>
                 <h3 className="text-lg sm:text-xl font-bold text-[var(--ink)]">
                   {activeProject.title}
