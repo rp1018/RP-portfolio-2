@@ -23,13 +23,15 @@ export const PROJECTS = [
     alt: 'Thinko AI interface'
   },
   {
-    id: 'student-management',
-    title: 'Student Management App',
-    subtitle: 'Flutter · Flask · Supabase · Cloudinary',
-    description: 'A mobile & backend solution built with Flutter, Flask, Supabase authentication & database, and Cloudinary media storage.',
-    link: '#',
-    src: '/projects/student-management.png',
-    alt: 'Student Management App screens'
+    id: 'gritx',
+    title: 'GritX: A Campus Marketplace for Students, Built with Flutter',
+    subtitle: 'Flutter · Dart · Firebase Auth · Cloud Firestore · Cloudinary',
+    tagline: 'Buy. Sell. Connect, within your campus.',
+    description: 'I built GritX, a student marketplace app where college students can buy and sell items within their campus community.',
+    fullDescription: 'I built GritX, a student marketplace app where college students can buy and sell items within their campus community.\n\n• Sign in with email or Google, or browse as a guest\n• Set your campus location with GPS or manually, and filter "Nearby" items\n• Browse listings by category: Books, Notes, Electronics, Sports, Furniture\n• Post items with photos, price, and an optional product-damage declaration\n• Chat with the seller in-app\n• Mark an item as sold to a buyer, who sees it under "My Orders"',
+    link: 'https://github.com/rp1018/Gritx',
+    src: '/projects/gritx.png',
+    alt: 'GritX campus marketplace app'
   },
   {
     id: 'ai-system-assistant',
